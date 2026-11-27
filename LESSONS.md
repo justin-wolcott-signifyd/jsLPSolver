@@ -991,6 +991,29 @@ cuts (c <= 0.5 b). Two-variable implications (y <= x) appear everywhere.
   lifted-cover port was reverted for moving bounds by +-1%; this one is a
   second, independent implementation and was measured per instance.)
 
+- **Lifted tie-break in c-MIR (measured, not kept).** On qnet1's capacity
+  rows (sum w pi <= bet + 24 gam) we already find HiGHS's cut, e.g.
+  `5 pi1 - bet - 5 gam <= 0`, but in an unlifted form: HiGHS's has coefficient
+  5 on the other large pi's too. Both come from the same MIR; ours picked
+  delta = 1 (in scaled row units), HiGHS's is delta = |coef of gam|, and the
+  two tie on efficacy because the extra terms sit at zero. Breaking ties
+  toward more weight on inactive variables reproduces HiGHS's cut exactly,
+  and then: vpm2 solves (40 s, was a timeout), dcmulti 771 -> 391 nodes,
+  qnet1 778 -> 642, but gesa2 7.3 -> 16.6 s, bell5 1.4 -> 3.4 s, p0282
+  82 -> 148 ms, fixnet6 1.5 -> 2.2 s. Root bounds after 3 rounds are equal or
+  move by < 0.5% either way (bell5: identical bound, 38% more nodes), and
+  after 40 aged rounds 4 of 6 go up and 2 down (fiber 394.6k -> 389.0k). So
+  it is search-order noise, not a better relaxation; the denser cuts also hit
+  the parallelism filter more. Even with 40 rounds qnet1's root reaches only
+  ~15.0k against HiGHS's 16.0k.
+- **What that says about the plan.** Single-row fixes no longer separate from
+  noise on this suite: a change must move the root bound clearly (compare
+  `tableau.evaluation` after addRootCuts, not solve time) before tree time
+  means anything. HiGHS's qnet1 pool holds several different covers per
+  capacity row found over many rounds at different LP points, kept in a pool;
+  the missing piece is that loop (sparse cuts only, pool, aging), not one
+  more formula.
+
 **Still to build, in the order the oracle suggests:** lifted covers on rows
 with general integers (qnet1), implied-bound and two-variable implication
 cuts (vpm2, p0548), flow covers (vpm2, gesa2). The transplant numbers are the
