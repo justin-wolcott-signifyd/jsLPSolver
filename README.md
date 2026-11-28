@@ -173,8 +173,9 @@ worker.postMessage(model);
 ## Performance
 
 Measured on an Apple M4 Max, Node.js 24, single thread. "v1.0.3" is the
-previous release; "1.1.0" is the current one (mod010, p0282, p0548 and lseu are
-measured on master, after the root cut probe and cover cuts). The reference is
+last release before 1.1.0; "1.2.0" is the current one (only mod010, p0282,
+p0548 and lseu differ from 1.1.0; the rest were measured on 1.1.0 and search
+identically). The reference is
 [HiGHS](https://highs.dev) compiled to WebAssembly (the npm `highs` package,
 version 1.16.0, single thread), the strongest solver that runs in the same
 place. How each step was reached, including what was tried and dropped, is in
@@ -182,7 +183,7 @@ place. How each step was reached, including what was tried and dropped, is in
 
 **Bundled problems** (`test/test-sanity`, median of repeated warm runs):
 
-| Problem          | Variables | Constraints | Integers | v1.0.3  | 1.1.0   |
+| Problem          | Variables | Constraints | Integers | v1.0.3  | 1.2.0   |
 | ---------------- | --------- | ----------- | -------- | ------- | ------- |
 | Vendor Selection | 1640      | 1641        | 40       | 155 ms  | 211 ms  |
 | Monster II MIP   | 924       | 888         | 112      | 19.8 ms | 4.7 ms  |
@@ -200,7 +201,7 @@ its history is in [LESSONS.md](./LESSONS.md).
 the returned solution vector is feasible and integral when checked against
 the model and its objective equals the optimum HiGHS proves:
 
-| Test set                     | v1.0.3                                  | 1.1.0          |
+| Test set                     | v1.0.3                                  | 1.2.0          |
 | ---------------------------- | --------------------------------------- | -------------- |
 | 25 Netlib LPs                | 19 correct (5 hang, 1 false infeasible) | **25 correct** |
 | 30 MIPLIB 3 MIPs, 30 s limit | 9 solved                                | **27 solved**  |
@@ -209,10 +210,10 @@ the model and its objective equals the optimum HiGHS proves:
 
 Not solved in 60 s: noswot and vpm2 (HiGHS-WASM: 16 s and 1.0 s).
 
-Time per MIPLIB 3 instance, one run each. The last column is 1.1.0 time
+Time per MIPLIB 3 instance, one run each. The last column is 1.2.0 time
 divided by HiGHS-WASM time, so below 1 means jsLPSolver is faster:
 
-| Instance | v1.0.3 | 1.1.0  | HiGHS-WASM | ratio |
+| Instance | v1.0.3 | 1.2.0  | HiGHS-WASM | ratio |
 | -------- | ------ | ------ | ---------- | ----- |
 | mas76    | > 30 s | 3.4 s  | 59.9 s     | 0.06  |
 | stein45  | -      | 1.7 s  | 13.8 s     | 0.12  |

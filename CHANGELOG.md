@@ -7,10 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-11-27
+
 ### Performance
 
-- **Root cut probe** - Gomory cuts were being rejected wholesale for their coefficient range because of rounding noise (an entry stored as `k + 1e-15`). When the plain pass loses more cuts than it keeps, the root is now retried with those coefficients relaxed away, and the result is kept if it makes the root LP integral. MIPLIB mod010: 7.2 s and 753 nodes to 0.22 s at the root; every other benchmark instance searches exactly as before.
-- **Knapsack cover cuts** - All-binary rows now also yield a lifted cover cut at the root (new `cover.ts`). MIPLIB p0548 963 to 466 ms and p0282 194 to 82 ms; lseu 58 to 74 ms; no other benchmark instance changes.
+- **Root cut probe** - Gomory cuts were being rejected wholesale for their coefficient range because of rounding noise (an entry stored as `k + 1e-15`). When the plain pass loses more cuts than it keeps, the root is now retried with those coefficients relaxed away, and the result is kept if it makes the root LP integral. MIPLIB mod010: 7.2 s and 753 nodes to 0.22 s at the root; every other benchmark instance searches exactly as before. ([#198](https://github.com/JWally/jsLPSolver/pull/198))
+- **Knapsack cover cuts** - All-binary rows now also yield a lifted cover cut at the root (new `cover.ts`). MIPLIB p0548 963 to 466 ms and p0282 194 to 82 ms; lseu 58 to 74 ms; no other benchmark instance changes. ([#199](https://github.com/JWally/jsLPSolver/pull/199))
 
 ### Added
 
